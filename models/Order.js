@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const Product=require('./Product.js');
 const Order = mongoose.Schema(
   {
     userId: {
@@ -43,9 +43,9 @@ Order.virtual('amount').get(function() {
   // Loop over the products in the order and add up the total price
   for (let i = 0; i < this.products.length; i++) {
     const product = this.products[i];
-    console.log(product.id.price);
-    const discount = product.id.discount || 0; // default to 0 if no discount
-    const price = product.id.price * (1 - discount / 100); // apply discount
+   const p=Product.findOne({_id:product.id})
+    const discount = p.discount || 0; // default to 0 if no discount
+    const price = p.price * (1 - discount / 100); // apply discount
     total_price += price * product.quantity;
   }
 
