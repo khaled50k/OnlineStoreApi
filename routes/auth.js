@@ -33,11 +33,11 @@ router.post("/register", async (req, res) => {
 
 // Log in a user
 router.post("/login", async (req, res) => {
-  console.log(req.body)
+
   const user = await User.findOne(
  { username: req.body.username.toLowerCase() 
   });
-    console.log(user)
+
 
   if (!user) {
     return res.status(404).send({ message: "User not found" });
@@ -49,7 +49,7 @@ router.post("/login", async (req, res) => {
   ).toString(CryptoJS.enc.Utf8);
 
   if (decryptedPassword !== req.body.password) {
-    return res.status(400).send({ message:decryptedPassword  });
+    return res.status(400).send({ message:"Invalid password"  });
   }
 
   const token = jwt.sign(
