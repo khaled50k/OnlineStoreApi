@@ -46,6 +46,7 @@ Order.virtual('amount').get(async function() {
   for (let i = 0; i < this.products.length; i++) {
     const product = this.products[i];
     const p = await Product.findById(product.id);
+    console.log(p);
     const discount = p.discount || 0; // default to 0 if no discount
     const price = p.price * (1 - discount / 100); // apply discount
     total_price += price * product.quantity;
