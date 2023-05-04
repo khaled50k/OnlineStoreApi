@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Product = require('./Product.js');
 
-const Order = mongoose.Schema(
+const OrderSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -30,31 +30,29 @@ const Order = mongoose.Schema(
       type: String,
       default: 'pending',
     },
+    amount: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
-     toJSON: {
-      virtuals: true // enable virtual properties in JSON output
-    }
   }
 );
 
-Order.virtual('amount').get(async function() {
-  let total_price = 0;
+// Update the "amount" field for an order using the products array
+OrderSchema.methods.updateAmount = async function() {
+  const products = this.products.map(async (product) => {
+    const p = await Product.findOne({_id: product.id});
+    const discount = p.discount || 0;
+    const price = p.price * (1 - discount / 100);
+    return price * product.quantity;
+  });
+  const total_price = await Promise.all(products).then(prices => prices.reduce((acc, price) => acc + price, 0));
+  this.amount = total_price;
+  console.log(total_price);
 
-  // Loop over the products in the order and add up the total price
-  for (let i = 0; i < this.products.length; i++) {
-    const product = this.products[i];
-    const a = await Product.findById(product.id);
-  const p =await a[0];
-    const discount = p.discount || 0; // default to 0 if no discount
-    const price = p.price * (1 - discount / 100); // apply discount
-    total_price += price * product.quantity;
-  }
+  await this.save();
+};
 
-  return total_price;
-});
-
-const OrderModel = mongoose.model("Order", Order);
-
-module.exports = OrderModel;
+module.exports = mongoose.model("Order", OrderSchema);
