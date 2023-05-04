@@ -8,7 +8,9 @@ const router = require("express").Router();
 
 router.post("/", verifyTokenAndAdmin, async (req, res) => {
   const newOrder = new Order(req.body);
+
   try {
+    await newOrder.updateAmount();
     const savedOrder = await newOrder.save();
     res.status(200).json(savedOrder);
   } catch (error) {
