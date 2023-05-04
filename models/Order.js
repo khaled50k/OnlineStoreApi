@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const Product=require('./Product.js');
+const Product = require("./Product.js");
+
 const Order = mongoose.Schema(
   {
     userId: {
@@ -32,25 +33,25 @@ const Order = mongoose.Schema(
   },
   {
     timestamps: true,
-     toJSON: {
-    virtuals: true // enable virtual properties in JSON output
-  }
+    toJSON: {
+      virtuals: true // enable virtual properties in JSON output
+    }
   }
 );
-Order.virtual('amount').get( async function() {
+
+Order.virtual('amount').get(async function() {
   let total_price = 0;
 
   // Loop over the products in the order and add up the total price
   for (let i = 0; i < this.products.length; i++) {
     const product = this.products[i];
-    const p=await Product.findOne({_id:product.id});
+    const p = await Product.findOne({ _id: product.id });
     const discount = p.discount || 0; // default to 0 if no discount
     const price = p.price * (1 - discount / 100); // apply discount
-       total_price += price * product.quantity;
+    total_price += price * product.quantity;
   }
 
   return total_price;
 });
-
 
 module.exports = mongoose.model("Order", Order);
