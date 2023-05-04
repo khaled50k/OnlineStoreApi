@@ -34,8 +34,8 @@ router.post("/register", async (req, res) => {
 // Log in a user
 router.post("/login", async (req, res) => {
   console.log(req.body)
-  const user = await User.findOne({
-    where: { username: req.body.username.toLowerCase() },
+  const user = await User.findOne(
+ { username: req.body.username.toLowerCase() 
   });
     console.log(user)
 
