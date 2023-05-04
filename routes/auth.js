@@ -33,9 +33,11 @@ router.post("/register", async (req, res) => {
 
 // Log in a user
 router.post("/login", async (req, res) => {
+  console.log(req.body)
   const user = await User.findOne({
     where: { username: req.body.username.toLowerCase() },
   });
+    console.log(user)
 
   if (!user) {
     return res.status(404).send({ message: "User not found" });
