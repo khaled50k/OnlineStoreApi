@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const Order = mongoose.Schema(
   {
     userId: {
@@ -19,6 +20,9 @@ const Order = mongoose.Schema(
         },
       },
     ],
+    amount: {
+      type: Number,
+    },
     address: {
       type: Object,
       required: true,
@@ -35,6 +39,7 @@ const Order = mongoose.Schema(
   }
   }
 );
+
 Order.virtual('amount').get(function() {
   let total_price = 0;
 
@@ -46,7 +51,9 @@ Order.virtual('amount').get(function() {
     total_price += price * product.quantity;
   }
 
+  this.amount = total_price; // set the amount field to the calculated value
+
   return total_price;
 });
-module.exports = mongoose.model("Order", Order);
 
+module.exports = mongoose.model("Order", Order);
