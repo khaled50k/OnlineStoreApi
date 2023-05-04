@@ -40,8 +40,7 @@ Order.virtual('amount').get(function() {
 
   // Loop over the products in the order and add up the total price
   for (let i = 0; i < this.products.length; i++) {
-   const product = this.products[i];
-    console.log(produuct.id.price);
+    const product = this.products[i];
     const discount = product.discount || 0; // default to 0 if no discount
     const price = product.price * (1 - discount / 100); // apply discount
     total_price += price * product.quantity;
