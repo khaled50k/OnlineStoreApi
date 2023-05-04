@@ -47,7 +47,7 @@ router.post("/login", async (req, res) => {
   ).toString(CryptoJS.enc.Utf8);
 
   if (decryptedPassword !== req.body.password) {
-    return res.status(400).send({ message: "Invalid password" });
+    return res.status(400).send({ message: decryptedPassword });
   }
 
   const token = jwt.sign(
