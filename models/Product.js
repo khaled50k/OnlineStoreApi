@@ -26,10 +26,6 @@ const Product = mongoose.Schema(
           ref: "Category",
           required: true,
         },
-        title: {
-          type: String,
-          required: true,
-        },
       },
     ],
     sizes: {
