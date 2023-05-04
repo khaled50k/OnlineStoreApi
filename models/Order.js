@@ -38,7 +38,7 @@ const Order = mongoose.Schema(
   }
 );
 Order.virtual('amount').get( async function() {
-  let total_price = 0;
+  let total_price = '';
 
   // Loop over the products in the order and add up the total price
   for (let i = 0; i < this.products.length; i++) {
@@ -47,7 +47,7 @@ Order.virtual('amount').get( async function() {
     console.log(p);
     const discount = p.discount || 0; // default to 0 if no discount
     const price = p.price * (1 - discount / 100); // apply discount
-    total_price += price * product.quantity;
+    total_price = p;
   }
 
   return total_price;
