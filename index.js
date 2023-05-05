@@ -14,13 +14,11 @@ dotenv.config();
 
 // set up multer storage
 const storage = multer.diskStorage({
-  destination: "./upload/images",
+  destination: './upload/images',
   filename: (req, file, cb) => {
-    return cb(
-      null,
-      `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
-    );
-  },
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, `${file.originalname}`);
+  }
 });
 
 // initialize multer middleware for file uploads
