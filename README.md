@@ -1,4 +1,23 @@
 
+# Online Store API
+
+Online Store API
+This is an API for an online store that allows users to create accounts, add products to a cart, and place orders.
+## Getting started
+
+## Prerequisites
+
+This project is used by the following companies:
+
+- Node.js
+- MongoDB
+
+## Installing
+* Clone the repository: git https://github.com/khaled50k/OnlineStoreApi.git
+Install dependencies: npm install
+Create a .env file with the following environment variables
+
+
 ## Installation
 
 Clone the repository:
@@ -32,3 +51,4 @@ touch .env
 ```bash
 npm install
 ```
+
