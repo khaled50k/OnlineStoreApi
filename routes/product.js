@@ -1,5 +1,6 @@
 // import Product model and verifyToken functions
 const Product = require("../models/Product");
+const Category = require("../models/Category");
 const {
   verifyToken,
   verifyTokenAndAuthorization,
@@ -61,7 +62,8 @@ router.get("/", async (req, res) => {
   // extract query parameters from request
   const qNew = req.query.new;
   const qCategory = req.query.category;
-  const limit = req.query.limit;
+  const limit = parseInt(req.query.limit);
+  const search = req.query.search;
 
   try {
     let products;
@@ -71,8 +73,38 @@ router.get("/", async (req, res) => {
         products = await Product.find().sort({ createdAt: -1 }).limit(limit);
       } else if (qCategory) {
         products = await Product.find({
-          "categories.categoryTitle": qCategory,
+          "categories.id": {
+            $in: await Category.find({
+              title: req.query.category,
+            }).distinct("_id"),
+          },
+        })
+          .populate("categories.id")
+          .limit(limit);
+      } else if (search) {
+        const regex = new RegExp(search, "i"); // case-insensitive search
+        products = await Product.find({
+          title: regex,
         }).limit(limit);
+      } else if (search && qNew) {
+        const regex = new RegExp(search, "i"); // case-insensitive search
+        products = await Product.find({
+          title: regex,
+        })
+          .sort({ createdAt: -1 })
+          .limit(limit);
+      } else if (qCategory && qNew) {
+        products = await Product.find({
+          "categories.id": {
+            $in: await Category.find({
+              title: req.query.category,
+            }).distinct("_id"),
+          },
+        })
+          .populate("categories.id")
+          .sort({ createdAt: -1 })
+          .limit(limit);
+        console.log(products);
       } else {
         products = await Product.find().limit(limit);
       }
@@ -83,8 +115,32 @@ router.get("/", async (req, res) => {
         products = await Product.find().sort({ createdAt: -1 });
       } else if (qCategory) {
         products = await Product.find({
-          "categories.categoryTitle": qCategory,
+          "categories.id": {
+            $in: await Category.find({
+              title: req.query.category,
+            }).distinct("_id"),
+          },
+        }).populate("categories.id");
+      } else if (search) {
+        const regex = new RegExp(search, "i"); // case-insensitive search
+        products = await Product.find({
+          title: regex,
         });
+      } else if (search && qNew) {
+        const regex = new RegExp(search, "i"); // case-insensitive search
+        products = await Product.find({
+          title: regex,
+        }).sort({ createdAt: -1 });
+      } else if (qCategory && qNew) {
+        products = await Product.find({
+          "categories.id": {
+            $in: await Category.find({
+              title: req.query.category,
+            }).distinct("_id"),
+          },
+        })
+          .populate("categories.id")
+          .sort({ createdAt: -1 });
       } else {
         products = await Product.find();
       }
