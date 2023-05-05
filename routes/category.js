@@ -1,10 +1,15 @@
+// Require Category model and token verification functions
 const Category = require("../models/Category");
 const {
   verifyToken,
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
 } = require("./verifyToken");
+
+// Create router instance
 const router = require("express").Router();
+
+// Create a new category
 router.post("/", verifyTokenAndAdmin, async (req, res) => {
   const newCategory = new Category(req.body);
   try {
@@ -15,9 +20,7 @@ router.post("/", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
-// update
-
-//UPDATE
+// Update an existing category
 router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
   try {
     const updatedCategory = await Category.findByIdAndUpdate(
@@ -32,15 +35,18 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
     res.status(500).json(err);
   }
 });
-// delete
+
+// Delete a category
 router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
   try {
     await Category.findByIdAndRemove(req.params.id);
-    res.status(200).json("Product has been deleted");
+    res.status(200).json("Category has been deleted");
   } catch (error) {
-    res.status(500).json(err);
+    res.status(500).json(error);
   }
 });
+
+// Find a category by ID
 router.get("/find/:id", async (req, res) => {
   try {
     const category = await Category.findById(req.params.id);
@@ -49,13 +55,15 @@ router.get("/find/:id", async (req, res) => {
     res.status(500).json(error);
   }
 });
-router.get("/", async (req, res) => {
-  try{
-    category = await Category.find();
 
-    res.status(200).json(category);
+// Get all categories
+router.get("/", async (req, res) => {
+  try {
+    const categories = await Category.find();
+    res.status(200).json(categories);
   } catch (error) {
     res.status(500).json(error);
   }
 });
+
 module.exports = router;
