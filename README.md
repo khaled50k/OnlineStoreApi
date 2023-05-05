@@ -30,6 +30,19 @@ ex- token: bearar token
 | `PUT  ` | `/api/product/:id` | Update a product (admin only).
 | `DELETE  ` | `/api/product/:id` | Delete a product (admin only).
 
+#### Orders
+
+| Method | Endpoint     | Description                |
+| :-------- | :------- | :------------------------- |
+| `GET  ` | `/api/order` | Retrieve a list of all orders (admin only).
+| `GET  ` | `/api/order/find/:id` | Retrieve a specific order by ID (user must be authenticated).
+| `GET  ` | `/api/order/income` | Retrieve orders income (admin only).
+| `POST  ` | `/api/order/` | Place a new order (user must be authenticated).
+| `PUT  ` | `/api/order/` | Update an order (admin only).
+| `DELETE  ` | `/api/order/` | Delete an order (admin only).
+
+
+
 
 
 
