@@ -52,9 +52,16 @@ router.post("/login", async (req, res) => {
       process.env.PASS_SEC
     ).toString(CryptoJS.enc.Utf8);
 
+    // Check if the decrypted password matches the password entered by the user
     if (decryptedPassword !== password) {
-      // If password is invalid, return error
+      // If the password is invalid, return an error message with 400 status code
       return res.status(400).json({ message: "Invalid password" });
+    }
+
+    // Check if the user's status is set to "active"
+    if (!user.status == "active") {
+      // If the user's status is not "active", return an error message with 403 status code
+      return res.status(403).json({ message: "You are blocked" });
     }
 
     // Create a JWT token with user id and role and set as a cookie in response
