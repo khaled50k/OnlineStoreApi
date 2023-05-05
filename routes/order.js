@@ -20,15 +20,19 @@ router.post("/", verifyTokenAndAdmin, async (req, res) => {
 
 //UPDATE
 router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
+  console.log('aa');
   try {
-    const updatedOrder = await Cart.findByIdAndUpdate(
+    const updatedOrder = await Order.findByIdAndUpdate(
       req.params.id,
       {
         $set: req.body,
       },
       { new: true }
     );
-    res.status(200).json(updatedOrder);
+
+    await updatedOrder.updateAmount();
+    const savedOrder = await updatedOrder.save();
+    res.status(200).json(savedOrder);
   } catch (err) {
     res.status(500).json(err);
   }
