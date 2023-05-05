@@ -10,12 +10,8 @@ This is an API for an online store that allows users to create accounts, add pro
 This project is used by the following companies:
 
 - Node.js
+- Express.js
 - MongoDB
-
-## Installing
-* Clone the repository: git https://github.com/khaled50k/OnlineStoreApi.git
-Install dependencies: npm install
-Create a .env file with the following environment variables
 
 
 ## Installation
