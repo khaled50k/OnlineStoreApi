@@ -60,7 +60,7 @@ router.post("/login", async (req, res) => {
     }
 
     // Check if the user's status is set to "active"
-    if (!user.status == "active") {
+    if (user.status == "inactive") {
       // If the user's status is not "active", return an error message with 403 status code
       return res.status(403).json({ message: "You are blocked" });
     }
