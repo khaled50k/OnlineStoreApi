@@ -30,7 +30,10 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
         $set: req.body,
       },
       { new: true }
-    );
+    ).populate({
+      path: "categories.category",
+      select: "title description",
+    });
     res.status(200).json(updatedProduct);
   } catch (err) {
     res.status(500).json(err);
@@ -50,7 +53,10 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
 // find product by id endpoint
 router.get("/find/:id", async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).populate({
+      path: "categories.category",
+      select: "title description",
+    });
     res.status(200).json(product);
   } catch (error) {
     res.status(500).json(error);
@@ -75,6 +81,10 @@ router.get("/", async (req, res) => {
           title: regex,
         })
           .sort({ createdAt: -1 })
+          .populate({
+            path: "categories.category",
+            select: "title description",
+          })
           .limit(limit);
       } else if (qCategory && qNew) {
         products = await Product.find({
@@ -84,7 +94,10 @@ router.get("/", async (req, res) => {
             }).distinct("_id"),
           },
         })
-          .populate("categories.id")
+          .populate({
+            path: "categories.category",
+            select: "title description",
+          })
           .sort({ createdAt: -1 })
           .limit(limit);
         console.log(products);
@@ -98,15 +111,28 @@ router.get("/", async (req, res) => {
             }).distinct("_id"),
           },
         })
-          .populate("categories.id")
+          .populate({
+            path: "categories.category",
+            select: "title description",
+          })
           .limit(limit);
       } else if (search) {
         const regex = new RegExp(search, "i"); // case-insensitive search
         products = await Product.find({
           title: regex,
-        }).limit(limit);
+        })
+          .populate({
+            path: "categories.category",
+            select: "title description",
+          })
+          .limit(limit);
       } else {
-        products = await Product.find().limit(limit);
+        products = await Product.find()
+          .populate({
+            path: "categories.category",
+            select: "title description",
+          })
+          .limit(limit);
       }
     }
     // if limit parameter is not set, retrieve all products
@@ -115,7 +141,12 @@ router.get("/", async (req, res) => {
         const regex = new RegExp(search, "i"); // case-insensitive search
         products = await Product.find({
           title: regex,
-        }).sort({ createdAt: -1 });
+        })
+          .populate({
+            path: "categories.category",
+            select: "title description",
+          })
+          .sort({ createdAt: -1 });
       } else if (qCategory && qNew) {
         products = await Product.find({
           "categories.id": {
@@ -124,7 +155,10 @@ router.get("/", async (req, res) => {
             }).distinct("_id"),
           },
         })
-          .populate("categories.id")
+          .populate({
+            path: "categories.category",
+            select: "title description",
+          })
           .sort({ createdAt: -1 });
       } else if (qNew) {
         products = await Product.find().sort({ createdAt: -1 });
@@ -135,14 +169,23 @@ router.get("/", async (req, res) => {
               title: req.query.category,
             }).distinct("_id"),
           },
-        }).populate("categories.id");
+        }).populate({
+          path: "categories.category",
+          select: "title description",
+        });
       } else if (search) {
         const regex = new RegExp(search, "i"); // case-insensitive search
         products = await Product.find({
           title: regex,
+        }).populate({
+          path: "categories.category",
+          select: "title description",
         });
       } else {
-        products = await Product.find();
+        products = await Product.find().populate({
+          path: "categories.category",
+          select: "title description",
+        });
       }
     }
 
