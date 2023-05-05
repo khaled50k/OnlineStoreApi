@@ -48,3 +48,27 @@ touch .env
 npm install
 ```
 
+
+## API Reference
+
+#### Authentication
+
+| Method | Endpoint     | Description                |
+| :-------- | :------- | :------------------------- |
+| `POST` | `/api/auth/register` | Register a new user with email and password.
+| `POST` | `/api/auth/login` | Login with email and password and receive a JWT token.
+
+#### Users
+
+| Method | Endpoint     | Description                |
+| :-------- | :------- | :------------------------- |
+| `GET  ` | `/api/users` | Retrieve a list of all users (admin only).
+| `GET  ` | `/api/users/:id` | Retrieve a specific user by ID (admin only).
+| `PUT  ` | `/api/users/:id` | Update a user's information (user must be authenticated).
+| `DELETE  ` | `/api/users/:id` | Delete a user (admin only).
+
+
+
+
+
+
