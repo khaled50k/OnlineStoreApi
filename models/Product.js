@@ -21,7 +21,7 @@ const Product = mongoose.Schema(
     },
     categories: [
       {
-        id: {
+        category: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Category",
           required: true,
@@ -49,7 +49,7 @@ const Product = mongoose.Schema(
     stock: {
       type: Number,
       default: 0,
-            required:true
+      required: true,
     },
   },
   {
