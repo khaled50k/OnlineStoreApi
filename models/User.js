@@ -20,6 +20,11 @@ const User = mongoose.Schema(
       default: "user",
       required: true,
     },
+    status: {
+      type: String,
+      default: "active",
+      required: true,
+    },
   },
   { timestamps: true }
 );
