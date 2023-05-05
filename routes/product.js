@@ -69,24 +69,7 @@ router.get("/", async (req, res) => {
     let products;
     // if limit parameter is set, use limit to retrieve a limited number of products
     if (limit) {
-      if (qNew) {
-        products = await Product.find().sort({ createdAt: -1 }).limit(limit);
-      } else if (qCategory) {
-        products = await Product.find({
-          "categories.id": {
-            $in: await Category.find({
-              title: req.query.category,
-            }).distinct("_id"),
-          },
-        })
-          .populate("categories.id")
-          .limit(limit);
-      } else if (search) {
-        const regex = new RegExp(search, "i"); // case-insensitive search
-        products = await Product.find({
-          title: regex,
-        }).limit(limit);
-      } else if (search && qNew) {
+      if (search && qNew) {
         const regex = new RegExp(search, "i"); // case-insensitive search
         products = await Product.find({
           title: regex,
@@ -105,14 +88,8 @@ router.get("/", async (req, res) => {
           .sort({ createdAt: -1 })
           .limit(limit);
         console.log(products);
-      } else {
-        products = await Product.find().limit(limit);
-      }
-    }
-    // if limit parameter is not set, retrieve all products
-    else {
-      if (qNew) {
-        products = await Product.find().sort({ createdAt: -1 });
+      } else if (qNew) {
+        products = await Product.find().sort({ createdAt: -1 }).limit(limit);
       } else if (qCategory) {
         products = await Product.find({
           "categories.id": {
@@ -120,13 +97,21 @@ router.get("/", async (req, res) => {
               title: req.query.category,
             }).distinct("_id"),
           },
-        }).populate("categories.id");
+        })
+          .populate("categories.id")
+          .limit(limit);
       } else if (search) {
         const regex = new RegExp(search, "i"); // case-insensitive search
         products = await Product.find({
           title: regex,
-        });
-      } else if (search && qNew) {
+        }).limit(limit);
+      } else {
+        products = await Product.find().limit(limit);
+      }
+    }
+    // if limit parameter is not set, retrieve all products
+    else {
+      if (search && qNew) {
         const regex = new RegExp(search, "i"); // case-insensitive search
         products = await Product.find({
           title: regex,
@@ -141,6 +126,21 @@ router.get("/", async (req, res) => {
         })
           .populate("categories.id")
           .sort({ createdAt: -1 });
+      } else if (qNew) {
+        products = await Product.find().sort({ createdAt: -1 });
+      } else if (qCategory) {
+        products = await Product.find({
+          "categories.id": {
+            $in: await Category.find({
+              title: req.query.category,
+            }).distinct("_id"),
+          },
+        }).populate("categories.id");
+      } else if (search) {
+        const regex = new RegExp(search, "i"); // case-insensitive search
+        products = await Product.find({
+          title: regex,
+        });
       } else {
         products = await Product.find();
       }
