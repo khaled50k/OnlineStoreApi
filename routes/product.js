@@ -104,14 +104,7 @@ router.get("/", async (req, res) => {
       } else if (qNew) {
         products = await Product.find().sort({ createdAt: -1 }).limit(limit);
       } else if (qCategory) {
-        products = await Product.find({
-          "categories.id": {
-            $in: await Category.find({
-              title: req.query.category,
-            }).distinct("_id"),
-          },
-        })
-          .populate({
+        products = await Product.find().populate({
             path: "categories.category",
             select: "title description",
           })
@@ -161,7 +154,10 @@ router.get("/", async (req, res) => {
           })
           .sort({ createdAt: -1 });
       } else if (qNew) {
-        products = await Product.find().sort({ createdAt: -1 });
+        products = await Product.find().sort({ createdAt: -1 }).populate({
+          path: "categories.category",
+          select: "title description",
+        });
       } else if (qCategory) {
         products = await Product.find({
           "categories.id": {
