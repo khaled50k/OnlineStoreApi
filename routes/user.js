@@ -10,6 +10,8 @@ const router = require("express").Router();
 
 // Update user by id
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
+  let { username, email, password, role, status } = req.body;
+
   // If the request body contains a password, encrypt it
   if (req.body.password) {
     req.body.password = CryptoJS.AES.encrypt(
@@ -19,17 +21,28 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
   }
 
   try {
-    // Update user in the database and return the updated user
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-        $set: req.body,
-      },
-      { new: true }
-    );
-    res.status(200).json(updatedUser);
-  } catch (err) {
-    res.status(500).json(err);
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (username!=user.username) {
+      const u = await User.findOne({ username: username });
+     if (u) {
+      return res.status(409).json({ message: "User is taken" });
+     }
+    }
+    user.username = username || user.username;
+    user.email = email || user.email;
+    user.role = role || user.role;
+    user.status = status || user.status;
+
+    await user.save();
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
   }
 });
 
