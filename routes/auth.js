@@ -15,7 +15,7 @@ router.post("/", getUserId);
 
 // Route to register a new user
 router.post("/register", async (req, res) => {
-  const { username, email, password, role } = req.body;
+  const { username, email, password, role,status } = req.body;
   const encryptedPassword = CryptoJS.AES.encrypt(
     password,
     process.env.PASS_SEC
@@ -28,6 +28,7 @@ router.post("/register", async (req, res) => {
       email,
       password: encryptedPassword,
       role: role || "user",
+      status:status || "active"
     });
     res.status(201).json(user);
   } catch (error) {
