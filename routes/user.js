@@ -57,7 +57,7 @@ router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
 });
 
 // Get user by id (only for admins)
-router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
+router.get("/find/:id", verifyTokenAndAuthorization, async (req, res) => {
   try {
     // Find user by id and exclude password from the returned data
     const user = await User.findById(req.params.id);
