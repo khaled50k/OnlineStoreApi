@@ -48,7 +48,7 @@ app.use(cookieParser());
 app.use(
   cors({
     // credentials: true,
-    origin: "https://onlinestore-1.khaledwaleade.repl.co",
+    origin: "*",
   })
 );
 
