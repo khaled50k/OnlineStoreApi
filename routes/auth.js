@@ -67,7 +67,7 @@ router.post("/login", async (req, res) => {
 
     // Create a JWT token with user id and role and set as a cookie in response
     const token = jwt.sign(
-      { userId: user._id, role: user.role },
+      { id: user._id, role: user.role },
       process.env.JWT_SEC
     );
     res.cookie("jwt", token, {
